@@ -876,6 +876,16 @@ void Taskbar::update() {
     for (unsigned long i = 0; i < tasks_.size(); i++) {
       move_button(tasks_[i]->button, i);
     }
+  } else if (config_["sort-by-creation-order"].asBool()) {
+    // Sort by task ID (creation order) to maintain consistent ordering
+    std::stable_sort(tasks_.begin(), tasks_.end(),
+                     [](const std::unique_ptr<Task> &a, const std::unique_ptr<Task> &b) {
+                       return a->id() < b->id();
+                     });
+
+    for (unsigned long i = 0; i < tasks_.size(); i++) {
+      move_button(tasks_[i]->button, i);
+    }
   }
 
   AModule::update();
